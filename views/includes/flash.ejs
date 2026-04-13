@@ -1,0 +1,28 @@
+ <!-- agar success aya tab hi ye div banao nahi to mat banao -->
+  <!-- aur success ka length bhi hiana chahiye ek baar hi length aata hai tab hi wo print hoga baar baar nahi -->
+
+ <% if(success && success.length) {%>
+ <div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
+    <%= success %>
+    <!-- ab ek cross button bano jisko click karne se jo flash aa raha wo dismiss ho jaye -->
+     <button 
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"></button>
+ </div>
+ <% }%>
+
+ <!-- error ke liye bhi same jaisa banao -->
+
+ <% if(error && error.length) {%>
+ <div class="alert alert-danger alert-dismissible fade show col-6 offset-3" role="alert">
+    <%= error %>
+    <!-- ab ek cross button bano jisko click karne se jo flash aa raha wo dismiss ho jaye -->
+     <button 
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"></button>
+ </div>
+ <% }%>
