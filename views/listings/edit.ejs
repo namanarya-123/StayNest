@@ -26,19 +26,28 @@
     
 
    <!-- yahan pe humlog preview ke liye image daal rahe hain -->
-    <div class="mb-3">
-      Original Listing Image <br>
-      <img length="100px" width="200px"
-       src="<%= originalImageUrl %>"/>
-    </div>
+   <div class="mb-3">
+  <label class="form-label">Current Images</label><br>
+  <% listing.images.forEach(img => { %>
+    <img src="<%= img.url.replace('/upload', '/upload/h_150,w_150') %>" 
+         style="width:150px; height:100px; object-fit:cover; margin:4px; border-radius:8px">
+  <% }) %>
+  </div>
     
     
 
-    <div class="mb-3">
-    <label for="image" class="form-label">Upload New Image</label>
-    <input name="listing[image][url]" value="<%= listing.image.url %>" type="file" class="form-control" >
-    <div class="invalid-feedback">Please enter valid link</div>
-    </div>
+<!-- ✅ Replace with this -->
+<div class="mb-3">
+  <label for="image" class="form-label">Add More Images</label>
+  <input 
+    name="listing[images]" 
+    type="file" 
+    class="form-control" 
+    multiple 
+    accept="image/*"
+  >
+  <small class="text-muted">Hold Ctrl / Cmd to select multiple photos. New images will be added to existing ones.</small>
+</div>
     
     <div class="row">
     <div class="mb-3 col-md-4">
@@ -65,7 +74,7 @@
     <br><br>
     <br><br>
     <button class="btn btn-dark edit-btn mt-3 mb-3">Edit</button>
-
+    </div>
     <br><br>
    </form>
 

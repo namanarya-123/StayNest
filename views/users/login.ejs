@@ -1,24 +1,194 @@
-<!-- login ka form banao -->
-
 <% layout("/layouts/boilerplate") %>
 
-<div class="row mt-3">
-    <h1 class="col-6 offset-3">Login</h1>
-    <div class="col-6 offset-3">
-       <form action="/login" method="POST" class="needs-validation" novalidate>
-        <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input name="username" id="username" type="text" class="form-control" required>
-        <!-- valid message print hoga ki title sahi hain -->
-        </div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
 
-          <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input name="password" id="password" type="password" class="form-control" required>
-        </div>
- 
-        <button class="btn btn-success mb-3">Login</button>
+  body { background: #F9F7F4; }
 
-       </form>
+  .auth-wrap {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .auth-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 40px rgba(26,23,20,0.08);
+  }
+
+  .auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 2rem;
+    text-decoration: none;
+  }
+  .auth-logo-name {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1A1714;
+  }
+  .auth-logo-name span { color: #E8453C; }
+
+  .auth-title {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1A1714;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .auth-sub {
+    font-size: 13px;
+    color: #8A8480;
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .auth-sub a { color: #E8453C; text-decoration: none; font-weight: 500; }
+
+  .auth-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #1A1714;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .auth-input {
+    width: 100%;
+    border: 1.5px solid #EDEAE5;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: #F9F7F4;
+    outline: none;
+    color: #1A1714;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .auth-input:focus {
+    border-color: #E8453C;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(232,69,60,0.08);
+  }
+  .auth-input::placeholder { color: #C4BFB9; }
+
+  .input-wrap { position: relative; }
+  .input-wrap .auth-input { padding-right: 42px; }
+  .eye-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #8A8480;
+    font-size: 13px;
+    padding: 4px;
+  }
+
+  .forgot {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #E8453C;
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
+  .auth-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    background: #E8453C;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+  .auth-btn:hover { background: #c93b33; }
+
+  .trust {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #C4BFB9;
+  }
+</style>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <a href="/listings" class="auth-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8453C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <div class="auth-logo-name">Stay<span>Nest</span></div>
+    </a>
+
+    <div class="auth-title">Welcome back 👋</div>
+    <div class="auth-sub">Don't have an account? <a href="/signup">Sign up free</a></div>
+
+    <form action="/login" method="POST" class="needs-validation" novalidate>
+
+      <div class="mb-3">
+        <label class="auth-label">Username</label>
+        <input name="username" type="text" class="auth-input" placeholder="Your username" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="auth-label">Password</label>
+        <div class="input-wrap">
+          <input name="password" id="lp" type="password" class="auth-input" placeholder="Your password" required>
+          <button type="button" class="eye-btn" onclick="toggleEye('lp', this)">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
+        <a href="#" class="forgot">Forgot password?</a>
+      </div>
+
+      <button class="auth-btn">Log in</button>
+    </form>
+
+    <div class="trust">
+      <div class="trust-item"><i class="fa-solid fa-lock"></i> Secure</div>
+      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> Private</div>
+      <div class="trust-item"><i class="fa-solid fa-bolt"></i> Free forever</div>
+    </div>
+
+  </div>
 </div>
-</div>
+
+<script>
+  function toggleEye(id, btn) {
+    const inp = document.getElementById(id);
+    const isPass = inp.type === 'password';
+    inp.type = isPass ? 'text' : 'password';
+    btn.innerHTML = isPass
+      ? '<i class="fa-regular fa-eye-slash"></i>'
+      : '<i class="fa-regular fa-eye"></i>';
+  }
+</script>

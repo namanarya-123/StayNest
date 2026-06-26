@@ -52,8 +52,10 @@ module.exports.createListing = async (req, res, next)=>{
     //     throw new ExpressError(404, result.error);
     // }
 
-    let url = req.file.path;
-    let filename = req.file.filename;
+    let images = req.files.map(f => ({
+    url: f.path,
+    filename: f.filename
+    }));
     // console.log(url, "..", filename);
 
     // console.log(req.body);
@@ -62,7 +64,7 @@ module.exports.createListing = async (req, res, next)=>{
     const newListing = new Listing(req.body.listing);
     // console.log(req.user);
     newListing.owner = req.user._id;
-    newListing.image = {url, filename};
+    newListing.images = images;
     await newListing.save();
 
     // flash messgae agar listing add hua to ye print hoga
@@ -82,10 +84,10 @@ module.exports.renderEditForm = async (req, res)=>{
        return res.redirect("/listings");
     }
 
-    let originalImageUrl = listing.image.url;
-    originalImageUrl = originalImageUrl.replace("/upload", "/upload/h_300,w_250");
+    // let originalImageUrl = listing.image.url;
+    // originalImageUrl = originalImageUrl.replace("/upload", "/upload/h_300,w_250");
     // url vchange karo jisse jo humlog ko edit form mae image bana rahe wo kam quality ka bane
-    res.render("listings/edit.ejs", {listing, originalImageUrl});
+    res.render("listings/edit.ejs", {listing});
     // originalImageUrl ko parse kar do 
 }
 
@@ -114,14 +116,14 @@ module.exports.updateListing = async (req,res) =>{
     // req.body.listng ko dereference karo
   
     // ye code jab file upload kar rahe tab likhe hain
-     if(typeof req.file !=="undefined")
-     {
-        let url = req.file.path;
-        let filename = req.file.filename;
-
-        listing.image = {url, filename};
-        await listing.save();
-     }
+    if(req.files && req.files.length > 0) {
+    let newImages = req.files.map(f => ({
+        url: f.path,
+        filename: f.filename
+    }));
+    listing.images.push(...newImages);
+    await listing.save();
+    } 
     //  agar req.file exist karta hain tab hi ye code execute karo
 
     req.flash("success" , "Listing Updated!");

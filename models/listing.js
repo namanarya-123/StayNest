@@ -11,10 +11,10 @@ const listingSchema = new Schema({
         required: true,
     },
      description : String,
-    image:{
-    // jab file upload wala feature dalo uske liya schema change karo
-    url: String,
-    filename : String,
+    // image:{
+    // // jab file upload wala feature dalo uske liya schema change karo
+    // url: String,
+    // filename : String,
 
 
     //     filename :{
@@ -31,7 +31,13 @@ const listingSchema = new Schema({
     //     // set means if v is empty (there is no image) then paste this link else paste your link.
     //     // image pass nahi kiye to ye lo
     //    },
-    },
+    // },
+    images: [
+    {
+        url: String,
+        filename: String,
+    }
+   ],
 
     price :Number,
     location: String,

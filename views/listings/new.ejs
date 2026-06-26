@@ -29,7 +29,16 @@
 
     <div class="mb-3">
     <label for="image"  class="form-label">Upload Listing Image </label>
-    <input name="listing[image][url]" placeholder="Enter image URL" type="file" class="form-control" required>
+    <label class="form-label">Upload Images (select multiple)</label>
+<input 
+  name="listing[images]" 
+  type="file" 
+  class="form-control" 
+  multiple 
+  accept="image/*"
+  required
+>
+<small class="text-muted">Hold Ctrl / Cmd to select multiple photos</small>
     
     </div>
     
