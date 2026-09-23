@@ -1,144 +1,330 @@
 <% layout("/layouts/boilerplate") %>
-<!-- iss link mae code likha hua hai wo direct copy ho jayega issme -->
- 
 
-    <div class="row">
-        <div class="col-8 offset-3">
-             <h3><%= listing.title  %></h3>
-        </div>
-    
-    <div class="card col-6 offset-3 show-card listing-card">
-     <div id="listingCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <% listing.images.forEach((img, i) => { %>
-      <div class="carousel-item <%= i===0 ? 'active' : '' %>">
-        <img src="<%= img.url %>" class="d-block w-100" 
-             style="height:400px; object-fit:cover; border-radius:12px">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+  
+  body { background: #F9F7F4; font-family: 'Inter', sans-serif; }
+
+  /* ── PAGE WRAP ── */
+  .show-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── TITLE ── */
+  .listing-title { font-family: 'Sora', sans-serif; font-size: 1.6rem; font-weight: 700; color: #1A1714; margin-bottom: 0.5rem; }
+  .listing-meta  { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #8A8480; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .meta-dot { color: #D0CCC6; }
+
+  /* ── IMAGE ── */
+  .img-wrap { border-radius: 20px; overflow: hidden; margin-bottom: 2rem; }
+  .img-wrap img { width: 100%; height: 460px; object-fit: cover; display: block; }
+  .carousel-item img { width: 100%; height: 460px; object-fit: cover; border-radius: 0; }
+
+  /* ── TWO COLUMN ── */
+  .content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 3rem; align-items: start; }
+  @media(max-width:900px){ .content-grid { grid-template-columns: 1fr; } }
+
+  /* ── LEFT ── */
+  .host-row { display: flex; align-items: center; gap: 12px; padding: 1.25rem 0; border-top: 1px solid #EDEAE5; border-bottom: 1px solid #EDEAE5; margin-bottom: 1.5rem; }
+  .host-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#E8453C,#f07450); display: flex; align-items: center; justify-content: center; font-family: 'Sora',sans-serif; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .host-name { font-size: 14px; font-weight: 600; color: #1A1714; }
+  .host-label { font-size: 12px; color: #8A8480; }
+
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8A8480; margin-bottom: 8px; }
+  .description { font-size: 14px; line-height: 1.8; color: #3D3A37; margin-bottom: 1.75rem; }
+
+  .detail-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.75rem; }
+  .chip { display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #EDEAE5; border-radius: 999px; padding: 6px 14px; font-size: 13px; color: #1A1714; }
+  .chip i { color: #E8453C; font-size: 12px; }
+
+  /* owner actions */
+  .owner-actions { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+  .btn-edit { padding: 8px 20px; border-radius: 10px; border: 1.5px solid #1A1714; background: transparent; color: #1A1714; font-size: 13px; font-weight: 500; font-family: 'Inter',sans-serif; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+  .btn-edit:hover { background: #1A1714; color: #fff; }
+  .btn-delete { padding: 8px 20px; border-radius: 10px; border: 1.5px solid #E8453C; background: transparent; color: #E8453C; font-size: 13px; font-weight: 500; font-family: 'Inter',sans-serif; cursor: pointer; transition: all 0.2s; }
+  .btn-delete:hover { background: #E8453C; color: #fff; }
+
+  /* ── REVIEWS ── */
+  .reviews-section { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #EDEAE5; }
+  .reviews-title { font-family: 'Sora',sans-serif; font-size: 1.1rem; font-weight: 700; color: #1A1714; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+
+  .review-form-card { background: #fff; border: 1px solid #EDEAE5; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; }
+  .review-form-card h5 { font-family: 'Sora',sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 1rem; color: #1A1714; }
+  .review-form-card textarea { width: 100%; border: 1.5px solid #EDEAE5; border-radius: 10px; padding: 10px 14px; font-size: 13px; font-family: 'Inter',sans-serif; background: #F9F7F4; outline: none; resize: vertical; min-height: 80px; color: #1A1714; transition: border-color 0.2s; }
+  .review-form-card textarea:focus { border-color: #E8453C; background: #fff; }
+  .review-submit { margin-top: 10px; padding: 9px 20px; border-radius: 10px; background: #1A1714; color: #fff; font-size: 13px; font-weight: 600; font-family: 'Sora',sans-serif; border: none; cursor: pointer; transition: background 0.2s; }
+  .review-submit:hover { background: #E8453C; }
+
+  .review-card { background: #fff; border: 1px solid #EDEAE5; border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 10px; }
+  .review-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .reviewer { display: flex; align-items: center; gap: 10px; }
+  .rev-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg,#667eea,#764ba2); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; font-family: 'Sora',sans-serif; flex-shrink: 0; }
+  .rev-name { font-size: 13px; font-weight: 600; color: #1A1714; }
+  .rev-text { font-size: 13px; line-height: 1.65; color: #3D3A37; }
+  .rev-delete { background: none; border: 1px solid #EDEAE5; border-radius: 999px; font-size: 11px; color: #8A8480; padding: 3px 10px; cursor: pointer; font-family: 'Inter',sans-serif; transition: all 0.15s; }
+  .rev-delete:hover { border-color: #E8453C; color: #E8453C; }
+
+  /* ── BOOKING CARD ── */
+  .booking-card { background: #fff; border: 1.5px solid #EDEAE5; border-radius: 20px; padding: 1.5rem; position: sticky; top: 84px; box-shadow: 0 4px 24px rgba(26,23,20,0.08); }
+  .booking-price-row { display: flex; align-items: baseline; gap: 4px; margin-bottom: 1.25rem; }
+  .booking-price { font-family: 'Sora',sans-serif; font-size: 1.5rem; font-weight: 700; color: #1A1714; }
+  .booking-per-night { font-size: 13px; color: #8A8480; }
+
+  .date-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid #EDEAE5; border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
+  .date-cell { padding: 10px 12px; }
+  .date-cell:first-child { border-right: 1px solid #EDEAE5; }
+  .date-cell label { display: block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #8A8480; margin-bottom: 3px; }
+  .date-cell input[type="date"] { border: none; background: transparent; font-size: 13px; font-weight: 500; color: #1A1714; outline: none; width: 100%; padding: 0; cursor: pointer; font-family: 'Inter',sans-serif; }
+
+  .error-msg { font-size: 12px; color: #E8453C; margin-top: 4px; display: none; }
+
+  #price-breakdown { display: none; background: #F9F7F4; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; font-size: 13px; }
+  .price-line { display: flex; justify-content: space-between; color: #8A8480; margin-bottom: 6px; }
+  .price-line span:last-child { color: #1A1714; font-weight: 500; }
+  .price-total-line { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; color: #1A1714; border-top: 1px solid #EDEAE5; padding-top: 8px; margin-top: 4px; }
+
+  .reserve-btn { width: 100%; padding: 13px; border-radius: 12px; background: #E8453C; color: #fff; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: background 0.2s; font-family: 'Sora',sans-serif; }
+  .reserve-btn:hover { background: #c93b33; }
+  .reserve-btn:disabled { background: #D0CCC6; cursor: not-allowed; }
+  .no-charge-text { font-size: 12px; color: #8A8480; text-align: center; margin-top: 8px; margin-bottom: 0; }
+</style>
+
+<div class="show-wrap">
+
+  <!-- TITLE + META -->
+  <h1 class="listing-title"><%= listing.title %></h1>
+  <div class="listing-meta">
+    <span>📍 <%= listing.location %>, <%= listing.country %></span>
+    <span class="meta-dot">·</span>
+    <span>Hosted by <b><%= listing.owner.username %></b></span>
+  </div>
+
+  <!-- IMAGE CAROUSEL -->
+  <div class="img-wrap">
+    <div id="listingCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <% listing.images.forEach((img, i) => { %>
+          <div class="carousel-item <%= i===0 ? 'active' : '' %>">
+            <img src="<%= img.url %>" alt="<%= listing.title %>">
+          </div>
+        <% }) %>
       </div>
-    <% }) %>
+      <% if(listing.images.length > 1) { %>
+        <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      <% } %>
+    </div>
   </div>
-  <% if(listing.images.length > 1) { %>
-  <button class="carousel-control-prev" type="button" data-bs-target="#listingCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#listingCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </button>
-  <% } %>
-</div>
-      <div class="card-body">
-    <p class="card-text">Owned by: 
-        <i><%= listing.owner.username  %></i></p>
-      <p class="card-text"> <%= listing.description  %> </p>
-      <p class="card-text"> &#8377;  <%= listing.price.toLocaleString("en-IN") %> </p>
-      <p class="card-text">  <%= listing.location  %> </p>
-      <p class="card-text"> <%= listing.country  %></p>
-    </div>
-    </div>
-    <!-- <ul>
-        <li><%= listing.title  %></li>
-        <li><%= listing.owner  %></li>
-        <li><%= listing.description  %></li>
-        <li> &#8377;  <%= listing.price.toLocaleString("en-IN")  %></li>
-        <li><%= listing.location  %></li>
-        <li><%= listing.country  %></li>
-    </ul> -->
-    <br>
 
+  <!-- TWO COLUMN GRID -->
+  <div class="content-grid">
 
-    <!-- yahan pr edit aur delete button hai -->
-     <!-- conition lagao ki jo iska actual owner ho usko hi ye button dikhai de.. baki kisi or ko nahi -->
-    <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
-     <!-- agar curr user ki jo id hai wo listing owner ki id ho .. tab hi usko ye dono button show ho.. baki kisi ko nahi -->
-    <div class="btns">
-    <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-1 offset-3 edit-btn">Edit </a>
-   
-    <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-        <button class="btn btn-dark offset-5">Delete </button>
-    </form>
-    </div>
-    <% } %>
+    <!-- ── LEFT COLUMN ── -->
+    <div>
 
-
-
-  <div class="col-8 offset-3">
-    <hr>
-
-    <!-- agar user login ho tab hi usko review add kare ka option show ho -->
-      <% if(currUser) {%>
-    <h4>Leave a review</h4>
-    <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
-
-
-        <!-- <div class="mb-3 mt-3">
-            <label for="rating" class="form-label">Rating</label>
-            <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+      <!-- HOST ROW -->
+      <div class="host-row">
+        <div class="host-avatar"><%= listing.owner.username[0].toUpperCase() %></div>
+        <div>
+          <div class="host-name">Hosted by <%= listing.owner.username %></div>
+          <div class="host-label">StayNest host</div>
         </div>
-         -->
+      </div>
 
-        <!-- star wala rating add karne ke liye -->
-         <div class="mb-3 mt-3">
-         <label for="rating" class="form-label">Rating</label>
+      <!-- DESCRIPTION -->
+      <div class="section-label">About this place</div>
+      <p class="description"><%= listing.description %></p>
 
-<fieldset class="starability-slot">
-  <!-- <legend>First rating:</legend> -->
+      <!-- DETAIL CHIPS -->
+      <div class="detail-chips">
+        <div class="chip"><i class="fa-solid fa-location-dot"></i> <%= listing.location %></div>
+        <div class="chip"><i class="fa-solid fa-flag"></i> <%= listing.country %></div>
+        <div class="chip"><i class="fa-solid fa-indian-rupee-sign"></i> <%= listing.price.toLocaleString("en-IN") %> / night</div>
+      </div>
 
-  <!-- ye deafult wale ke liye hsin -->
-  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
-
-
-  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-  <label for="first-rate1" title="Terrible">1 star</label>
-  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-  <label for="first-rate2" title="Not good">2 stars</label>
-  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-  <label for="first-rate3" title="Average">3 stars</label>
-  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-  <label for="first-rate4" title="Very good">4 stars</label>
-  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-  <label for="first-rate5" title="Amazing">5 stars</label>
-</fieldset>
-
-</div>
-
-        <div class="mb-3 mt-3">
-            <label for="comment" class="form-label"> Comments</label>
-            <textarea name="review[comment]" id="comment" cols="30" rows="5  " class="form-control" required></textarea>
-            <!-- isko likhne se  Please add some comments for review... ye error mae show hoga  -->
-
-            <!-- client side validation isko bol skate hai -->
-                <div class="invalid-feedback">
-                Please add some comments for review
-                </div>
+      <!-- OWNER ACTIONS -->
+      <% if(currUser && listing.owner._id.equals(currUser._id)) { %>
+        <div class="owner-actions">
+          <a href="/listings/<%= listing._id %>/edit" class="btn-edit">✏️ Edit listing</a>
+          <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE" style="margin:0">
+            <button class="btn-delete">🗑️ Delete</button>
+          </form>
         </div>
-        <button class="btn btn-outline-dark">Submit</button>
-    </form>
-    <% } %>
+      <% } %>
 
-    <h4>All Reviews</h4>
-    <!-- <ul>
-        <% for(review of listing.reviews){%>
-            <li><%= review.comment %>, <%= review.rating %>  stars</li>
-            <%}%>
-    </ul> -->
-     <div class="row">
-    <% for(review of listing.reviews){%>
-        <div class="card col-5 ms-3 mb-3">
-            <div class="card-body">
-                <h5 class="card-title">@<%= review.author.username %></h5>
-                  <!-- star rating ko sghow karne ke liye add karoo issme -->
+      <!-- REVIEWS SECTION -->
+      <div class="reviews-section">
+        <div class="reviews-title">
+          <i class="fa-solid fa-star" style="color:#C9A84C;font-size:16px"></i>
+          All Reviews (<%= listing.reviews.length %>)
+        </div>
 
-                 <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-                <p class="card-text"><%= review.comment %></p>
-                <!-- <p class="card-text"><%= review.rating %> star</p> -->
-
-             </div>        
-
-            <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" class="mb-3" method="POST">
-                <button class="btn btn-sm btn-dark">Delete</button>
+        <!-- Leave a review form -->
+        <% if(currUser) { %>
+          <div class="review-form-card">
+            <h5>Leave a review</h5>
+            <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+              <div class="mb-3">
+                <fieldset class="starability-slot">
+                  <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                  <label for="first-rate1" title="Terrible">1 star</label>
+                  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                  <label for="first-rate2" title="Not good">2 stars</label>
+                  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                  <label for="first-rate3" title="Average">3 stars</label>
+                  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                  <label for="first-rate4" title="Very good">4 stars</label>
+                  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                  <label for="first-rate5" title="Amazing">5 stars</label>
+                </fieldset>
+              </div>
+              <textarea name="review[comment]" placeholder="Share your experience..." required></textarea>
+              <button type="submit" class="review-submit">Submit review</button>
             </form>
+          </div>
+        <% } %>
+
+        <!-- All reviews -->
+        <% if(listing.reviews.length === 0) { %>
+          <p style="font-size:13px;color:#8A8480;">No reviews yet. Be the first to review!</p>
+        <% } %>
+
+        <% for(let review of listing.reviews) { %>
+          <div class="review-card">
+            <div class="review-header">
+              <div class="reviewer">
+                <div class="rev-avatar"><%= review.author.username[0].toUpperCase() %></div>
+                <div>
+                  <div class="rev-name">@<%= review.author.username %></div>
+                  <p class="starability-result" data-rating="<%= review.rating %>" style="margin:0;font-size:12px;"></p>
+                </div>
+              </div>
+              <% if(currUser && review.author._id.equals(currUser._id)) { %>
+                <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" style="margin:0">
+                  <button class="rev-delete">Delete</button>
+                </form>
+              <% } %>
+            </div>
+            <p class="rev-text"><%= review.comment %></p>
+          </div>
+        <% } %>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT COLUMN: BOOKING CARD ── -->
+    <div>
+      <div class="booking-card">
+
+        <div class="booking-price-row">
+          <div class="booking-price">&#8377;<%= listing.price.toLocaleString("en-IN") %></div>
+          <div class="booking-per-night">&nbsp;/ night</div>
         </div>
-          <%}%>   
-  </div>
+
+        <div class="date-grid">
+          <div class="date-cell">
+            <label>Check-in</label>
+            <input type="date" id="checkIn" min="<%= new Date().toISOString().split('T')[0] %>" onchange="calcPrice()">
+          </div>
+          <div class="date-cell">
+            <label>Check-out</label>
+            <input type="date" id="checkOut" min="<%= new Date().toISOString().split('T')[0] %>" onchange="calcPrice()">
+          </div>
+        </div>
+
+        <div class="error-msg" id="dateError">⚠️ Check-out must be after check-in</div>
+
+        <div id="price-breakdown">
+          <div class="price-line"><span id="nightsLabel"></span><span id="nightsTotal"></span></div>
+          <div class="price-line"><span>Cleaning fee</span><span>&#8377;500</span></div>
+          <div class="price-line"><span>GST (18%)</span><span id="gstAmt"></span></div>
+          <div class="price-total-line"><span>Total</span><span id="grandTotal"></span></div>
+        </div>
+
+        <button class="reserve-btn" id="reserveBtn" onclick="handleReserve()" disabled>
+          Select dates to reserve
+        </button>
+        <p class="no-charge-text">You won't be charged yet</p>
+
+      </div>
+    </div>
+
   </div>
 </div>
+
+<script>
+  const PRICE_PER_NIGHT = <%= listing.price %>;
+  const CLEANING_FEE = 500;
+
+  function calcPrice() {
+    const checkIn  = document.getElementById("checkIn").value;
+    const checkOut = document.getElementById("checkOut").value;
+    const errorEl  = document.getElementById("dateError");
+    const btn      = document.getElementById("reserveBtn");
+    const breakdown= document.getElementById("price-breakdown");
+
+    errorEl.style.display = "none";
+    breakdown.style.display = "none";
+    btn.disabled = true;
+    btn.textContent = "Select dates to reserve";
+
+    if (!checkIn || !checkOut) return;
+
+    const ci = new Date(checkIn);
+    const co = new Date(checkOut);
+
+    if (co <= ci) { errorEl.style.display = "block"; return; }
+
+    const nights   = Math.ceil((co - ci) / (1000 * 60 * 60 * 24));
+    const subtotal = PRICE_PER_NIGHT * nights;
+    const gst      = Math.round((subtotal + CLEANING_FEE) * 0.18);
+    const total    = subtotal + CLEANING_FEE + gst;
+
+    document.getElementById("nightsLabel").textContent = `₹${PRICE_PER_NIGHT.toLocaleString("en-IN")} × ${nights} night${nights > 1 ? "s" : ""}`;
+    document.getElementById("nightsTotal").textContent = `₹${subtotal.toLocaleString("en-IN")}`;
+    document.getElementById("gstAmt").textContent      = `₹${gst.toLocaleString("en-IN")}`;
+    document.getElementById("grandTotal").textContent  = `₹${total.toLocaleString("en-IN")}`;
+
+    breakdown.style.display = "block";
+    btn.disabled = false;
+    btn.textContent = `Reserve for ₹${total.toLocaleString("en-IN")}`;
+  }
+
+  function handleReserve() {
+  <% if(!currUser) { %>
+    window.location.href = "/login";
+    return;
+  <% } %>
+
+  const checkIn  = document.getElementById("checkIn").value;
+  const checkOut = document.getElementById("checkOut").value;
+
+  if (!checkIn || !checkOut) {
+    alert("Please select both dates!");
+    return;
+  }
+
+  const btn = document.getElementById("reserveBtn");
+  btn.textContent = "Redirecting to payment...";
+  btn.disabled = true;
+
+  fetch("/listings/<%= listing._id %>/book", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ checkIn, checkOut })
+  })
+  .then(res => res.json())
+  .then(data => {
+    // ✅ direct assign — preserves the # part of Stripe URL
+    window.location.assign(data.url);
+  })
+  .catch(err => {
+    console.error(err);
+    btn.textContent = "Something went wrong. Try again.";
+    btn.disabled = false;
+  });
+}
+</script>

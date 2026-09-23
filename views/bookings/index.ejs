@@ -1,0 +1,74 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  body { background: #F9F7F4; }
+  .bookings-wrap { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .page-title { font-family: 'Sora', sans-serif; font-size: 1.5rem; font-weight: 700; color: #1A1714; margin-bottom: 0.25rem; }
+  .page-sub   { font-size: 13px; color: #8A8480; margin-bottom: 2rem; }
+
+  .booking-card {
+    background: #fff;
+    border: 1px solid #EDEAE5;
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .booking-img {
+    width: 110px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .booking-info { flex: 1; }
+  .booking-title { font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; color: #1A1714; margin-bottom: 4px; }
+  .booking-dates { font-size: 12px; color: #8A8480; margin-bottom: 4px; }
+  .booking-price { font-size: 13px; font-weight: 600; color: #1A1714; }
+  .badge-paid { display: inline-block; font-size: 11px; font-weight: 600; background: #DCFCE7; color: #166534; border-radius: 999px; padding: 2px 10px; margin-left: 8px; }
+
+  .empty-state { text-align: center; padding: 4rem 1rem; }
+  .empty-state i { font-size: 3rem; color: #D0CCC6; margin-bottom: 1rem; }
+  .empty-state h3 { font-family: 'Sora', sans-serif; font-size: 1.1rem; color: #1A1714; margin-bottom: 8px; }
+  .empty-state p  { font-size: 13px; color: #8A8480; margin-bottom: 1.5rem; }
+  .explore-btn { display: inline-block; padding: 10px 24px; background: #E8453C; color: #fff; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; font-family: 'Sora', sans-serif; }
+</style>
+
+<div class="bookings-wrap">
+  <div class="page-title">My Bookings</div>
+  <div class="page-sub">All your confirmed trips in one place</div>
+
+  <% if(bookings.length === 0) { %>
+    <div class="empty-state">
+      <i class="fa-regular fa-calendar-xmark"></i>
+      <h3>No bookings yet</h3>
+      <p>You haven't booked any stays. Start exploring!</p>
+      <a href="/listings" class="explore-btn">Explore listings</a>
+    </div>
+  <% } %>
+
+  <% for(let b of bookings) { %>
+    <div class="booking-card">
+      <img
+        src="<%= b.listing && b.listing.images && b.listing.images.length > 0 ? b.listing.images[0].url : '' %>"
+        class="booking-img"
+        alt="<%= b.listing ? b.listing.title : 'Listing' %>"
+      >
+      <div class="booking-info">
+        <div class="booking-title">
+          <%= b.listing ? b.listing.title : "Listing deleted" %>
+          <span class="badge-paid">✅ Paid</span>
+        </div>
+        <div class="booking-dates">
+          📅 <%= new Date(b.checkIn).toDateString() %> → <%= new Date(b.checkOut).toDateString() %>
+          &nbsp;·&nbsp; <%= b.nights %> night<%= b.nights > 1 ? "s" : "" %>
+        </div>
+        <div class="booking-price">
+          Total paid: &#8377;<%= b.totalPrice.toLocaleString("en-IN") %>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>

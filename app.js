@@ -32,6 +32,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const bookingRouter = require("./routes/booking");
 
 // const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 async function main() {
@@ -116,6 +117,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+// for /:id/book route
 
 
 
@@ -148,6 +150,8 @@ app.use((req, res, next) => {
 app.use("/listings" , listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/bookings", bookingRouter);
+app.use("/listings", bookingRouter); 
 
 
 
